@@ -1,4 +1,12 @@
-export default function Home() {
+import { client } from "@/sanity/lib/client";
+
+async function getDichVu() {
+  return client.fetch(`*[_type == "dichVu"]{ten, gia, moTa}`);
+}
+
+export default async function Home() {
+  const dichVuList = await getDichVu();
+
   return (
     <main className="min-h-screen bg-slate-900 text-white">
       <section className="max-w-4xl mx-auto px-6 py-20 text-center">
@@ -11,7 +19,7 @@ export default function Home() {
           mới cho chiếc xe của bạn.
         </p>
         <a
-          href="#"
+          href="/lien-he"
           className="inline-block bg-blue-500 hover:bg-blue-600 px-8 py-4 rounded-full font-semibold transition"
         >
           Đặt lịch ngay
@@ -19,24 +27,13 @@ export default function Home() {
       </section>
 
       <section className="max-w-4xl mx-auto px-6 pb-20 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-slate-800 rounded-xl p-6">
-          <h3 className="text-xl font-semibold mb-2">Phủ Ceramic</h3>
-          <p className="text-slate-400">
-            Bảo vệ sơn, chống xước, bóng bền lâu.
-          </p>
-        </div>
-        <div className="bg-slate-800 rounded-xl p-6">
-          <h3 className="text-xl font-semibold mb-2">Dán PPF</h3>
-          <p className="text-slate-400">
-            Lớp phim bảo vệ trong suốt, chống va quẹt.
-          </p>
-        </div>
-        <div className="bg-slate-800 rounded-xl p-6">
-          <h3 className="text-xl font-semibold mb-2">Đánh Bóng</h3>
-          <p className="text-slate-400">
-            Xóa xước dăm, phục hồi độ bóng gương.
-          </p>
-        </div>
+        {dichVuList.map((dv: any) => (
+          <div key={dv.ten} className="bg-slate-800 rounded-xl p-6">
+            <h3 className="text-xl font-semibold mb-2">{dv.ten}</h3>
+            <p className="text-blue-400 font-semibold mb-2">{dv.gia}</p>
+            <p className="text-slate-400">{dv.moTa}</p>
+          </div>
+        ))}
       </section>
     </main>
   );
