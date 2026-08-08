@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ChatWidget from "./components/ChatWidget";
+import MobileNav from "./components/MobileNav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,30 +26,32 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-neutral-950">
-        {/* TOP BAR — hotline + giờ mở cửa */}
+        {/* TOP BAR — chỉ hiện trên desktop */}
         <div className="hidden md:flex items-center justify-between bg-black text-neutral-400 text-xs px-6 py-2 border-b border-neutral-900">
           <span>Chăm sóc xe chuyên nghiệp · Ceramic · PPF · Đánh bóng</span>
           <div className="flex items-center gap-5">
             <span>8:00 – 18:00 (T2–CN)</span>
             <a
-              href="tel:0382589015"
+              href="tel:0909123456"
               className="text-amber-400 font-semibold hover:text-amber-300 transition"
             >
-              ☎ 0382 589 015
+              ☎ 0909 123 456
             </a>
           </div>
         </div>
 
         {/* MENU CHÍNH — sticky */}
-        <nav className="sticky top-0 z-50 bg-neutral-950/95 backdrop-blur border-b border-neutral-800 text-neutral-200 px-6 py-4 flex items-center justify-between">
+        <nav className="sticky top-0 z-50 bg-neutral-950/95 backdrop-blur border-b border-neutral-800 text-neutral-200 px-4 md:px-6 py-4 flex items-center justify-between">
           <a
             href="/"
-            className="flex items-center gap-2 font-bold text-xl text-white"
+            className="flex items-center gap-2 font-bold text-lg md:text-xl text-white shrink-0"
           >
             <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
             Detailing<span className="text-amber-400">Center</span>
           </a>
-          <div className="flex items-center gap-7 text-sm font-medium">
+
+          {/* Menu desktop — ẩn trên mobile */}
+          <div className="hidden md:flex items-center gap-7 text-sm font-medium">
             <a href="/" className="hover:text-amber-400 transition">
               Trang chủ
             </a>
@@ -68,6 +71,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               Đặt lịch ngay
             </a>
           </div>
+
+          {/* Menu mobile — nút hamburger */}
+          <MobileNav />
         </nav>
 
         {children}
