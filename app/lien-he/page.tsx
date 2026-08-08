@@ -1,20 +1,38 @@
-export default function LienHe() {
+import { client } from "@/sanity/lib/client";
+
+type ThongTin = {
+  hotline: string;
+  diaChi: string;
+  gioMoCua: string;
+  email: string;
+};
+
+async function getThongTin(): Promise<ThongTin> {
+  return client.fetch(
+    `*[_type == "thongTinChung"][0]{hotline, diaChi, gioMoCua, email}`,
+  );
+}
+
+export default async function LienHePage() {
+  const tt = await getThongTin();
+
   return (
-    <main className="min-h-screen bg-slate-900 text-white">
-      <section className="max-w-2xl mx-auto px-6 py-20 text-center">
-        <h1 className="text-4xl font-bold mb-6">Liên Hệ & Đặt Lịch</h1>
-        <p className="text-slate-300 mb-8">
-          Gọi ngay để được tư vấn và đặt lịch chăm sóc xe.
+    <main className="max-w-3xl mx-auto p-8">
+      <h1 className="text-3xl font-bold mb-8">Liên Hệ</h1>
+      <div className="space-y-4 text-lg">
+        <p>
+          <strong>Hotline:</strong> {tt?.hotline}
         </p>
-        <div className="space-y-3 text-lg">
-          <p>
-            📞 Hotline:{" "}
-            <span className="text-blue-400 font-semibold">0900 000 000</span>
-          </p>
-          <p>📍 Địa chỉ: 123 Đường ABC, Quận XYZ</p>
-          <p>🕐 Giờ mở cửa: 8h00 - 18h00 hằng ngày</p>
-        </div>
-      </section>
+        <p>
+          <strong>Địa chỉ:</strong> {tt?.diaChi}
+        </p>
+        <p>
+          <strong>Giờ mở cửa:</strong> {tt?.gioMoCua}
+        </p>
+        <p>
+          <strong>Email:</strong> {tt?.email}
+        </p>
+      </div>
     </main>
   );
 }
