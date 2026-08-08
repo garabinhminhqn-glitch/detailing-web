@@ -31,6 +31,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <a href="/bang-gia" className="hover:text-blue-400">
             Bảng giá
           </a>
+          <a href="/blog" className="hover:text-blue-400">
+            Blog
+          </a>
           <a href="/lien-he" className="hover:text-blue-400">
             Liên hệ
           </a>
