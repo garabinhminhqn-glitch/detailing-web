@@ -1,14 +1,16 @@
 import { client } from "@/sanity/lib/client";
+import { urlFor } from "@/sanity/lib/image";
 import Link from "next/link";
 
 type BaiViet = {
   _id: string;
   tieuDe: string;
   slug: { current: string };
+  anh: any;
 };
 
 async function getBaiViet(): Promise<BaiViet[]> {
-  return client.fetch(`*[_type == "baiViet"]{_id, tieuDe, slug}`);
+  return client.fetch(`*[_type == "baiViet"]{_id, tieuDe, slug, anh}`);
 }
 
 export default async function BlogPage() {
@@ -22,9 +24,18 @@ export default async function BlogPage() {
           <Link
             key={bv._id}
             href={`/blog/${bv.slug.current}`}
-            className="border rounded-lg p-6 hover:bg-gray-50 block"
+            className="border rounded-lg overflow-hidden hover:bg-gray-50 block"
           >
-            <h2 className="text-xl font-semibold text-blue-600">{bv.tieuDe}</h2>
+            {bv.anh && (
+              <img
+                src={urlFor(bv.anh).width(800).height(300).url()}
+                alt={bv.tieuDe}
+                className="w-full h-48 object-cover"
+              />
+            )}
+            <h2 className="text-xl font-semibold text-blue-600 p-6">
+              {bv.tieuDe}
+            </h2>
           </Link>
         ))}
       </div>
