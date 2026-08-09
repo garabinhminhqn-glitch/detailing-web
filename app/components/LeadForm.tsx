@@ -8,7 +8,9 @@ export default function LeadForm() {
   const [form, setForm] = useState({
     ten: "",
     sdt: "",
-    thoi_gian: "",
+    gmail: "",
+    ngay_hen: "",
+    buoi: "sang",
     dich_vu: "Phủ Ceramic",
     mo_ta: "",
   });
@@ -26,7 +28,6 @@ export default function LeadForm() {
   };
 
   const handleSubmit = async () => {
-    // Validate cứng trên web trước khi gửi
     if (!form.ten.trim()) {
       setStatus("error");
       setMsg("Vui lòng nhập họ tên.");
@@ -35,6 +36,16 @@ export default function LeadForm() {
     if (!/^0\d{9}$/.test(form.sdt.trim())) {
       setStatus("error");
       setMsg("Số điện thoại không hợp lệ (10 số, bắt đầu bằng 0).");
+      return;
+    }
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.gmail.trim())) {
+      setStatus("error");
+      setMsg("Email không hợp lệ.");
+      return;
+    }
+    if (!form.ngay_hen) {
+      setStatus("error");
+      setMsg("Vui lòng chọn ngày hẹn.");
       return;
     }
 
@@ -53,7 +64,9 @@ export default function LeadForm() {
         setForm({
           ten: "",
           sdt: "",
-          thoi_gian: "",
+          gmail: "",
+          ngay_hen: "",
+          buoi: "sang",
           dich_vu: "Phủ Ceramic",
           mo_ta: "",
         });
@@ -96,14 +109,41 @@ export default function LeadForm() {
           />
         </div>
         <div className="flex-1">
-          <label className={labelClass}>Thời gian mong muốn</label>
+          <label className={labelClass}>Email</label>
           <input
-            name="thoi_gian"
-            value={form.thoi_gian}
+            name="gmail"
+            type="email"
+            value={form.gmail}
             onChange={handleChange}
-            placeholder="Thứ 4 tuần sau"
+            placeholder="email@gmail.com"
             className={inputClass}
           />
+        </div>
+      </div>
+
+      <div className="flex gap-3 mt-3">
+        <div className="flex-1">
+          <label className={labelClass}>Ngày hẹn</label>
+          <input
+            name="ngay_hen"
+            type="date"
+            value={form.ngay_hen}
+            onChange={handleChange}
+            className={`${inputClass} [color-scheme:dark]`}
+          />
+        </div>
+        <div className="flex-1">
+          <label className={labelClass}>Buổi</label>
+          <select
+            name="buoi"
+            value={form.buoi}
+            onChange={handleChange}
+            className={inputClass}
+          >
+            <option value="sang">Sáng</option>
+            <option value="chieu">Chiều</option>
+            <option value="toi">Tối</option>
+          </select>
         </div>
       </div>
 
