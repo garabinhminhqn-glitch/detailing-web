@@ -1,17 +1,35 @@
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
+import type { Metadata } from "next";
 
 type BaiViet = {
   tieuDe: string;
   noiDung: string;
   anh: any;
+  metaTitle?: string;
+  metaDescription?: string;
+  altText?: string;
 };
 
 async function getBaiViet(slug: string): Promise<BaiViet> {
   return client.fetch(
-    `*[_type == "baiViet" && slug.current == $slug][0]{tieuDe, noiDung, anh}`,
+    `*[_type == "baiViet" && slug.current == $slug][0]{tieuDe, noiDung, anh, metaTitle, metaDescription, altText}`,
     { slug },
   );
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const bv = await getBaiViet(slug);
+  if (!bv) return { title: "Không tìm thấy bài viết" };
+  return {
+    title: bv.metaTitle || bv.tieuDe,
+    description: bv.metaDescription || "",
+  };
 }
 
 export default async function ChiTietPage({
@@ -55,7 +73,7 @@ export default async function ChiTietPage({
         {bv.anh && (
           <img
             src={urlFor(bv.anh).width(900).url()}
-            alt={bv.tieuDe}
+            alt={bv.altText || bv.tieuDe}
             className="w-full rounded-2xl mb-10 border border-neutral-800"
           />
         )}
@@ -64,7 +82,6 @@ export default async function ChiTietPage({
           {bv.noiDung}
         </div>
 
-        {/* CTA cuối bài */}
         <div className="mt-14 pt-10 border-t border-neutral-800 text-center">
           <p className="text-neutral-300 mb-5">
             Muốn chăm sóc xe của bạn đúng cách?
